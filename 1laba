@@ -1,0 +1,131 @@
+#include "stdafx.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+class Config
+{
+private:
+	static Config*cfgobj;
+
+	Config() : IP(" "), LOGIN(" "), PASSWORD(" ")
+	{}
+public:
+
+	void ReadConfiguration()
+	{
+		ifstream ConfigFile("C:/Users/User/Documents/Visual Studio 2013/Projects/1laba/1laba/cfg.txt");
+		string ConfigInfo;
+		getline(ConfigFile, ConfigInfo);
+		int Count = 0;
+		for (int i = 0; i < ConfigInfo.size(); ++i)
+		{
+			if (ConfigInfo[i] != ':' && Count == 0)
+			{
+				IP.push_back(ConfigInfo[i]);
+				continue;
+			}
+			if (ConfigInfo[i] == ':' && Count == 0)
+			{
+				Count = 1;
+				continue;
+			}
+			if (ConfigInfo[i] != ':' && Count == 1)
+			{
+				LOGIN.push_back(ConfigInfo[i]);
+				continue;
+			}
+			if (ConfigInfo[i] == ':' && Count == 1)
+			{
+				Count = 2;
+				continue;
+			}
+			if (ConfigInfo[i] != ':' && Count == 2)
+			{
+				PASSWORD.push_back(ConfigInfo[i]);
+				continue;
+			}
+		}
+	}
+	string IP;
+
+	string LOGIN;
+
+	string PASSWORD;
+	
+public:
+
+	void Print()
+	{
+		cout << IP << "   " << LOGIN << "   " << PASSWORD << endl;
+	}
+
+	static Config* GetInstance()
+	{
+		if (cfgobj == nullptr)
+		{
+			
+			cfgobj = new Config;
+
+		}
+		else
+		{
+
+		}
+		return cfgobj;
+	}
+	void SetIP()
+	{
+		string UserIP;
+		cin >>UserIP;
+		IP = UserIP;
+	}
+	void SetLOGIN()
+	{
+		string UserLOGIN;
+		cin >> UserLOGIN;
+		LOGIN = UserLOGIN;
+	}
+	void SetPASSWORD()
+	{
+		string UserPASSWORD;
+		cin >> UserPASSWORD;
+		PASSWORD = UserPASSWORD;
+	}
+
+
+};
+
+Config* Config::cfgobj = nullptr;
+
+int main()
+{
+	auto ConfigObject = Config::GetInstance();
+	ConfigObject->ReadConfiguration();
+	int result;
+	for (;;){
+		cout << "Choose an action:\n1)Input new IP\t2)Input new logint\t3)Input new password\n";
+		cin >> result;
+		if (result == 1)
+		{
+			ConfigObject->SetIP();
+			ConfigObject->Print();
+		}
+		else if (result == 2)
+		{
+			ConfigObject->SetLOGIN();
+			ConfigObject->Print();
+		}
+		else if (result == 3)
+		{
+			ConfigObject->SetPASSWORD();
+			ConfigObject->Print();
+		}
+		else
+		{
+			cout << "Wrong answer!\n";
+		}
+	}
+
+	return 0;
+}
